@@ -7,6 +7,7 @@ from sklearn.pipeline import Pipeline
 import matplotlib.pyplot as plt
 reddit = praw.Reddit(client_id="p1lt136fs51SWOv6zlM6QA",client_secret="Ffth4WUUPhmFO4_b6oUdlmY5e3ZOYA",
                      username="Hot-Helicopter5986",password="",user_agent="a")
+keyword = st.text_input("Enter the topic that you want to research keywords for")
 subreddit = reddit.subreddit('Python')
 hot = subreddit.hot(limit=20)
 df = pd.DataFrame()
