@@ -27,7 +27,7 @@ if st.button('Say hello'):
 
     model = Pipeline([('vectorizer', tvec), ('classifier',clf)])
     model.fit(df.title,df.ups)
-    title = st.write("Put the keywords that you want to predict")
+    title = st.text_input("Put the keywords that you want to predict")
     st.write(model.predict(title))
     df['Title length'] = len(df['title'])
     for i in range(len(df)):
