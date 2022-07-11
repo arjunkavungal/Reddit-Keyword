@@ -1,4 +1,5 @@
 import pickle
+from flask import send_file
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import Pipeline
@@ -7,6 +8,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
+import seaborn as sns
+import io
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 pickle.dump(Pipeline([('vectorizer', TfidfVectorizer()), ('classifier',LinearRegression())]), open('model.pkl', 'wb'))
 
@@ -30,8 +34,17 @@ def title_length_graph(df):
     q_hi  = df["Title length"].quantile(0.99)
 
     df_filtered = df[(df["Title length"] < q_hi) & (df["Title length"] > q_low)]
-    plt.scatter(df_filtered['Title length'],df_filtered.ups)
-    plt.show()
+    sns.set(style='whitegrid')
+    
+    fig,ax=plt.subplots(figsize=(6,6))
+    ax=sns.set(style="darkgrid")
+    sns.scatterplot(df['Title length'],df['ups'])
+    canvas=FigureCanvas(fig)
+    img = io.BytesIO()
+    fig.savefig(img)
+    img.seek(0)
+    return img
+
 def get_word_count(df):
     a = []
     for i in range(len(df)):

@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, render_template
 app = Flask(__name__)
 import praw
+import sys
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LinearRegression
@@ -16,6 +17,9 @@ nltk.download('stopwords')
 plt.switch_backend('Agg') 
 @app.route("/")
 def home():
+    return render_template('index.html')
+@app.route('/visualize')
+def visualize():
     subreddit = reddit.subreddit('python')
     hot = subreddit.hot(limit=20)
     df = get_hot_titles()
@@ -33,6 +37,6 @@ def home():
     df = unweighted_word_count(df)
   
     plot_weighted_keywords(df)
-    s = ""
-    s += df['title'][1]
-    return str(model.predict(['python'])[0])
+    img = title_length_graph(df)
+    #print(df[['ups','Title length']], file=sys.stderr)
+    return send_file(img,mimetype='img/png')
