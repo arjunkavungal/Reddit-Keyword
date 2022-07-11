@@ -100,4 +100,13 @@ def plot_weighted_keywords(df):
     df = df.append(df.sum().rename('Total'))
     df.iloc[-1][4:-1].astype(int).nlargest(25).plot(kind="bar")
     plt.rcParams["figure.figsize"] = (6,6)
-    plt.show()
+    fig,ax=plt.subplots(figsize=(6,6))
+    ax=sns.set(style="darkgrid")
+    weighted_keywords = df.iloc[-1][4:-1]
+    weighted_keywords = weighted_keywords.sort_values(ascending=False)
+    sns.barplot(weighted_keywords.index[3:10],weighted_keywords.values[3:10])
+    canvas=FigureCanvas(fig)
+    img = io.BytesIO()
+    fig.savefig(img)
+    img.seek(0)
+    return img
