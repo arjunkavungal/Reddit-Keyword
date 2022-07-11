@@ -83,18 +83,18 @@ def unweighted_word_count(df):
     df["count"]= df["title"].str.get(0)
     df = df.iloc[:20,:4]
     df['title'].map(lambda x: x.lower() if isinstance(x,str) else x)
-    df = df.iloc[:20,:4]
-    df['title'].map(lambda x: x.lower() if isinstance(x,str) else x)
+    #df = df.iloc[:20,:4]
+    #df['title'].map(lambda x: x.lower() if isinstance(x,str) else x)
 
     for j in range(len(df)):
         for i in s.split(' '):
             df.at[j,i] = df['title'][j].count(i)
     return df
 def plot_weighted_keywords(df):
-    df = df.append(df.sum().rename('Total'))
-    df.iloc[-1][4:-1].astype(int).nlargest(25).plot(kind="bar")
-    plt.rcParams["figure.figsize"] = (6,6)
-    plt.show()
+    #df = df.append(df.sum().rename('Total'))
+    #df.iloc[-1][4:-1].astype(int).nlargest(25).plot(kind="bar")
+    #plt.rcParams["figure.figsize"] = (6,6)
+    #plt.show()
     for i in df.columns[4:]:
         df[i] = df[i] * df['ups']
     df = df.append(df.sum().rename('Total'))
@@ -104,7 +104,8 @@ def plot_weighted_keywords(df):
     ax=sns.set(style="darkgrid")
     weighted_keywords = df.iloc[-1][4:-1]
     weighted_keywords = weighted_keywords.sort_values(ascending=False)
-    sns.barplot(weighted_keywords.index[3:10],weighted_keywords.values[3:10])
+    weighted_keywords = weighted_keywords.drop(labels=[''])
+    sns.barplot(weighted_keywords.index[:5],weighted_keywords.values[:5])
     canvas=FigureCanvas(fig)
     img = io.BytesIO()
     fig.savefig(img)
