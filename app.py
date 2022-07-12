@@ -22,17 +22,29 @@ def home():
 @app.route('/process', methods=['POST'])
 def process():
 
-	name = request.form['name']
 
-	if name:
-		newName = name[::-1]
+    name = request.form['name']
 
-		return jsonify({'name' : newName})
+    if name:
+        df = get_hot_titles(name)
+        df = get_title_length(df)
+        title_length_graph(df)
+        df = get_word_count(df)
+   
+        graph_scatter_plot(df, 'Word count', 'ups', "Word count", "Number of Upvotes","Effect of Word Count on Number of Upvotes ")
+        df = unweighted_word_count(df)
+        for i in df.columns[4:]:
+            df[i] = df[i] * df['ups']
+        df = df.append(df.sum().rename('Total'))      
 
-	return jsonify({'error' : 'Missing data!'})
+        return jsonify({'name' : str(df.iloc[-1][4:-1].astype(int).nlargest(25).keys())})
+
+
+
+
 @app.route('/visualize')
 def visualize():
-    print(request.args.get('name'), file=sys.stderr)
+    name = request.form['name']
     subreddit = reddit.subreddit('python')
     hot = subreddit.hot(limit=20)
     df = get_hot_titles('python')
@@ -56,6 +68,7 @@ def visualize():
     return send_file(img,mimetype='img/png')
 @app.route('/weighted_keyword')
 def weighted_keyword():
+    name = request.form['name']
     subreddit = reddit.subreddit('python')
     hot = subreddit.hot(limit=20)
     df = get_hot_titles('python')

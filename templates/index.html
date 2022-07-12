@@ -18,28 +18,16 @@
 	<div id="errorAlert" class="alert alert-danger" role="alert" style="display:none;"></div>
 </body>
 <script>
-    function change_image() {
-    var img = document.getElementById("weighted_keyword");
-    var img2 = document.getElementById("word_length_vs_ups");
-    img.src = "{{ url_for('weighted_keyword') }}"
-    img2.src = "{{ url_for('visualize') }}"
-    }
-    $('#retrieve').click(function(){
-
-});
-$(document).ready(function() {
+    $(document).ready(function() {
 
 $('form').on('submit', function(event) {
-    
-    
 
-    
     $.ajax({
         data : {
             name : $('#firstname').val(),
         },
         type : 'POST',
-        url : '/weighted_keyword'
+        url : '/process'
     })
     .done(function(data) {
 
@@ -51,27 +39,6 @@ $('form').on('submit', function(event) {
             $('#successAlert').text(data.name).show();
             $('#errorAlert').hide();
         }
-    
-
-    });
-    $.ajax({
-        data : {
-            name : $('#firstname').val(),
-        },
-        type : 'POST',
-        url : '/visualize'
-    })
-    .done(function(data) {
-
-        if (data.error) {
-            $('#errorAlert').text(data.error).show();
-            $('#successAlert').hide();
-        }
-        else {
-            $('#successAlert').text(data.name).show();
-            $('#errorAlert').hide();
-        }
-    
 
     });
 
@@ -80,5 +47,7 @@ $('form').on('submit', function(event) {
 });
 
 });
+
+
 </script>
 </html>
