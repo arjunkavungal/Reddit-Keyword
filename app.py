@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 import praw
 import sys
@@ -15,14 +15,27 @@ import pickle
 nltk.download('punkt')
 nltk.download('stopwords')
 plt.switch_backend('Agg') 
+name = ""
 @app.route("/")
 def home():
     return render_template('index.html')
+@app.route('/process', methods=['POST'])
+def process():
+
+	name = request.form['name']
+
+	if name:
+		newName = name[::-1]
+
+		return jsonify({'name' : newName})
+
+	return jsonify({'error' : 'Missing data!'})
 @app.route('/visualize')
 def visualize():
+    print(request.args.get('name'), file=sys.stderr)
     subreddit = reddit.subreddit('python')
     hot = subreddit.hot(limit=20)
-    df = get_hot_titles()
+    df = get_hot_titles('python')
 
     model = pickle.load(open('model.pkl', 'rb'))
     model.fit(df.title,df.ups)
@@ -45,7 +58,7 @@ def visualize():
 def weighted_keyword():
     subreddit = reddit.subreddit('python')
     hot = subreddit.hot(limit=20)
-    df = get_hot_titles()
+    df = get_hot_titles('python')
 
     model = pickle.load(open('model.pkl', 'rb'))
     model.fit(df.title,df.ups)

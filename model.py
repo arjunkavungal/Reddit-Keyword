@@ -16,7 +16,7 @@ pickle.dump(Pipeline([('vectorizer', TfidfVectorizer()), ('classifier',LinearReg
 
 reddit = praw.Reddit(client_id="p1lt136fs51SWOv6zlM6QA",client_secret="Ffth4WUUPhmFO4_b6oUdlmY5e3ZOYA",
                      username="Hot-Helicopter5986",password="",user_agent="a")
-def get_hot_titles():
+def get_hot_titles(keyword):
     subreddit = reddit.subreddit('python')
     hot = subreddit.hot(limit=20)
     df = pd.DataFrame()
