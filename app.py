@@ -37,7 +37,7 @@ def process():
             df[i] = df[i] * df['ups']
         df = df.append(df.sum().rename('Total'))      
 
-        return jsonify({'name' : str(df.iloc[-1][4:-1].astype(int).nlargest(25).keys())})
+        return jsonify({'name' : " ".join(df.iloc[-1][4:-1].astype(int).nlargest(25).keys().values.tolist()), 'val':' '.join(str(x) for x in df.iloc[-1][4:-1].astype(int).nlargest(25).values.tolist())})
 
 
 
